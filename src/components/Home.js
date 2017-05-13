@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Color from '../style/Color';
 import Style from '../style/Style';
 import {connect} from 'react-redux';
+import * as Keys from '../storage/keys';
 
 class Home extends Component {
     constructor(props) {
@@ -26,20 +27,20 @@ class Home extends Component {
         headerLeft: <Text></Text>
     });
 
+    componentWillReceiveProps(nextProps) {
+        this.addStorage(nextProps.dictList);
+    }
+
     async displayProps() {
-        console.log('************ Home Props');
-        console.info(this.props);
-        const dictList = this.props.dictList
-            ? this.props.dictList
-            : [];
-        await AsyncStorage.setItem('@myctionary:dictList', JSON.stringify(dictList));
-        const vl = await AsyncStorage.getItem('@myctionary:dictList');
+        const vl = await AsyncStorage.getItem(Keys.DICT_LIST);
         console.info(vl);
     }
 
-    componentWillReceiveProps() {
-        console.log('**************************** componentWillReceiveProps');
-        this.displayProps();
+    async addStorage(dicts) {
+        const dictList = dicts
+            ? dicts
+            : [];
+        await AsyncStorage.setItem(Keys.DICT_LIST, JSON.stringify(dictList));
     }
 
     render() {
@@ -56,7 +57,6 @@ class Home extends Component {
                         </TouchableHighlight>
                         {(() => {
                             const listLength = this.props.dictList.length;
-                            console.log('Home: listLength: ' + listLength);
                             if (listLength > 0) {
                                 const returnContents = [];
                                 this.props.dictList.map((key) => {

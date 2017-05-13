@@ -31,7 +31,8 @@ class AddDict extends Component {
     });
 
     addNewDict() {
-        this.props.addDict(this.state.name, this.state.description);
+        const id = this.props.dictList.length ? this.props.dictList.length : 0;
+        this.props.addDict(id, this.state.name, this.state.description);
     }
 
     render() {
@@ -56,7 +57,7 @@ class AddDict extends Component {
 const mapStateToProps = state => ({dictList: state.dicts});
 
 const mapDispatchToProps = dispatch => ({
-    addDict: (name, description) => dispatch(addDict(name, description))
+    addDict: (id, name, description) => dispatch(addDict(id, name, description))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddDict);

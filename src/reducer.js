@@ -5,45 +5,41 @@ import {
     NavigationActions
 } from 'react-navigation';
 
-import {
-    App
-} from './App';
+import {AppNavigator} from './components/Navigator';
+import * as actions from './actions/action';
 
 
-const firstAction = App.router.getActionForPathAndParams('Home');
-const tempNavState = App.router.getStateForAction(firstAction);
-const secondAction = App.router.getActionForPathAndParams('AddDict');
-const initialNavState = App.router.getStateForAction(firstAction, tempNavState);
+const firstAction = AppNavigator.router.getActionForPathAndParams('Home');
+const tempNavState = AppNavigator.router.getStateForAction(firstAction);
+const secondAction = AppNavigator.router.getActionForPathAndParams('AddDict');
+const initialNavState = AppNavigator.router.getStateForAction(firstAction, tempNavState);
 
 
 function nav(state = initialNavState, action) {
-    console.log('nav red');
-    console.info(action);
-    console.info(state)
     let nextState;
     switch (action.type) {
         case 'Home':
-            nextState = App.router.getStateForAction(NavigationActions.navigate({
+            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({
                 routeName: 'Home'
             }), state);
             break;
         case 'AddDict':
-            nextState = App.router.getStateForAction(NavigationActions.navigate({
+            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({
                 routeName: 'AddDict'
             }), state);
             break;
         case 'WordList':
-            nextState = App.router.getStateForAction(NavigationActions.navigate({
+            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({
                 routeName: 'WordList'
             }), state);
             break;
         case 'AddWord':
-            nextState = App.router.getStateForAction(NavigationActions.navigate({
+            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({
                 routeName: 'AddDict'
             }), state);
             break;
         case 'Back':
-            nextState = App.router.getStateForAction(NavigationActions.back(), state);
+            nextState = AppNavigator.router.getStateForAction(NavigationActions.back(), state);
             break;
         default:
             nextState = state;
@@ -59,7 +55,17 @@ const initialDictState = {
 
 const dict = (state, action) => {
     switch (action.type) {
-        case 'ADD_DICT':
+        case actions.INITIAL_DICT:
+            let list = [];
+            action.data.map((key) => {
+                list.push({
+                    id: key['id'],
+                    name: key['name'],
+                    description: key['description'],
+                })
+            })
+            return list;
+        case actions.ADD_DICT:
             return {
                 id: action.id,
                 name: action.name,
@@ -71,16 +77,16 @@ const dict = (state, action) => {
 }
 
 function dicts(state = initialDictState, action) {
-    console.log('dict red');
-    console.info(action);
-    console.info(state)
     switch (action.type) {
-        case 'ADD_DICT':
+        case actions.INITIAL_DICT:
+            return dict(undefined, action);
+
+        case actions.ADD_DICT:
             return [
                 ...state,
                 dict(undefined, action)
             ]
-        case 'DELETE_DICT':
+        case actions.DELETE_DICT:
             return { ...state,
             };
         default:
