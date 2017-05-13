@@ -1,9 +1,16 @@
 import React, {Component} from 'react';
-import {View, ScrollView, TouchableHighlight, Button, Text} from 'react-native';
+import {
+    View,
+    ScrollView,
+    TouchableHighlight,
+    Button,
+    Text,
+    AsyncStorage
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Color from '../style/Color';
 import Style from '../style/Style';
-import {test, addTodo} from '../actions/action';
+import {connect} from 'react-redux';
 
 class Home extends Component {
     constructor(props) {
@@ -19,6 +26,22 @@ class Home extends Component {
         headerLeft: <Text></Text>
     });
 
+    async displayProps() {
+        console.log('************ Home Props');
+        console.info(this.props);
+        const dictList = this.props.dictList
+            ? this.props.dictList
+            : [];
+        await AsyncStorage.setItem('@myctionary:dictList', JSON.stringify(dictList));
+        const vl = await AsyncStorage.getItem('@myctionary:dictList');
+        console.info(vl);
+    }
+
+    componentWillReceiveProps() {
+        console.log('**************************** componentWillReceiveProps');
+        this.displayProps();
+    }
+
     render() {
         const {dispatch} = this.props.navigation;
 
@@ -31,10 +54,25 @@ class Home extends Component {
                                 <Icon style={Style.home.dictionaries.addIcon} size={40} name="ios-add"></Icon>
                             </View>
                         </TouchableHighlight>
-                        <TouchableHighlight style={Style.home.dictionaries.cellButton} activeOpacity={0.9} onPress={() => navigate('WordList')}>
-                            <View style={Style.home.dictionaries.cell}></View>
-                        </TouchableHighlight>
-                        <View style={Style.home.dictionaries.cell}/>
+                        {(() => {
+                            const listLength = this.props.dictList.length;
+                            console.log('Home: listLength: ' + listLength);
+                            if (listLength > 0) {
+                                const returnContents = [];
+                                this.props.dictList.map((key) => {
+                                    const name = key['name'];
+                                    const id = key['id'];
+                                    returnContents.push(
+                                        <TouchableHighlight key={id} style={Style.home.dictionaries.cellButton} activeOpacity={0.9} onPress={this.displayProps.bind(this)}>
+                                            <View style={Style.home.dictionaries.cell}>
+                                                <Text>{name}</Text>
+                                            </View>
+                                        </TouchableHighlight>
+                                    )
+                                })
+                                return returnContents;
+                            }
+                        })()}
                     </View>
                 </ScrollView>
             </View>
@@ -42,4 +80,5 @@ class Home extends Component {
     }
 }
 
-export default Home;
+const mapStateToProps = state => ({dictList: state.dicts});
+export default connect(mapStateToProps)(Home);

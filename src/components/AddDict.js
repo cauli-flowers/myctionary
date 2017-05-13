@@ -11,14 +11,17 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Color from '../style/Color';
 import Style from '../style/Style';
 import {connect} from 'react-redux';
+import {addDict} from '../actions/action';
 
 class AddDict extends Component {
     constructor() {
         super();
         this.state = {
-            text: ''
+            name: '',
+            description: '',
         };
     }
+
     static navigationOptions = ({navigation, screenProps}) => ({
         title: '辞書の追加',
         headerStyle: {
@@ -27,17 +30,20 @@ class AddDict extends Component {
         headerLeft: <Icon.Button backgroundColor={Color.white} color={Color.pink} size={Style.common.navigation.button} name="ios-arrow-back" onPress={() => navigation.dispatch({type: 'Back'})}>戻る</Icon.Button>
     });
 
+    addNewDict() {
+        this.props.addDict(this.state.name, this.state.description);
+    }
+
     render() {
-        console.info(this.props)
         return (
             <ScrollView style={Style.home.dictionaries.scrollArea}>
                 <View style={Style.common.formArea}>
-                    <TextInput placeholder="辞書名" style={Style.common.textInput} onChangeText={(text) => this.setState({text})} value={this.state.text} editable={true} maxLength={40}/>
+                    <TextInput placeholder="辞書名" style={Style.common.textInput} onChangeText={(name) => this.setState({name})} value={this.state.name} editable={true} maxLength={40}/>
 
-                    <TextInput placeholder="説明" style={Style.common.textInput} onChangeText={(text) => this.setState({text})} value={this.state.text} editable={true} maxLength={40}/>
+                    <TextInput placeholder="説明" style={Style.common.textInput} onChangeText={(description) => this.setState({description})} value={this.state.description} editable={true} maxLength={40}/>
 
-                    <TouchableOpacity onPress={() => {}}>
-                        <View style={Style.common.button.regist} onPress={this.props.add}>
+                    <TouchableOpacity onPress={this.addNewDict.bind(this)}>
+                        <View style={Style.common.button.regist}>
                             <Text style={Style.common.button.text}>登録</Text>
                         </View>
                     </TouchableOpacity>
@@ -47,10 +53,10 @@ class AddDict extends Component {
     }
 }
 
-const mapStateToProps = state => ({dicts: state.dicts});
+const mapStateToProps = state => ({dictList: state.dicts});
 
 const mapDispatchToProps = dispatch => ({
-    add: () => dispatch({type: 'ADD_DICT', name: 'サンプル名前', description: 'サンプル説明'})
+    addDict: (name, description) => dispatch(addDict(name, description))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddDict);

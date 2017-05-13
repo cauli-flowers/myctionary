@@ -17,8 +17,10 @@ const initialNavState = App.router.getStateForAction(firstAction, tempNavState);
 
 
 function nav(state = initialNavState, action) {
+    console.log('nav red');
+    console.info(action);
+    console.info(state)
     let nextState;
-    //alert('nav')
     switch (action.type) {
         case 'Home':
             nextState = App.router.getStateForAction(NavigationActions.navigate({
@@ -44,9 +46,7 @@ function nav(state = initialNavState, action) {
             nextState = App.router.getStateForAction(NavigationActions.back(), state);
             break;
         default:
-            nextState = App.router.getStateForAction(NavigationActions.navigate({
-                routeName: 'Home'
-            }), state);
+            nextState = state;
             break;
     }
 
@@ -71,9 +71,11 @@ const dict = (state, action) => {
 }
 
 function dicts(state = initialDictState, action) {
+    console.log('dict red');
+    console.info(action);
+    console.info(state)
     switch (action.type) {
         case 'ADD_DICT':
-            alert('ADD_DICT')
             return [
                 ...state,
                 dict(undefined, action)
