@@ -13,6 +13,7 @@ import Style from '../style/Style';
 import {connect} from 'react-redux';
 import * as Keys from '../storage/keys';
 import * as Actions from '../actions/action';
+import {setCurrentDict} from '../actions/action';
 
 class Home extends Component {
     constructor(props) {
@@ -29,19 +30,28 @@ class Home extends Component {
     });
 
     componentWillReceiveProps(nextProps) {
-        this.addStorage(nextProps.dictList);
+        console.info(nextProps)
+        this.addStorage(nextProps.dictList, nextProps.wordList);
     }
 
     async displayProps() {
-        const vl = await AsyncStorage.getItem(Keys.DICT_LIST);
-        console.info(vl);
+        const vl1 = await AsyncStorage.getItem(Keys.DICT_LIST);
+        console.info(vl1);
     }
 
-    async addStorage(dicts) {
+    async addStorage(dicts, words) {
+        let saveList = [];
         const dictList = dicts
             ? dicts
             : [];
-        await AsyncStorage.setItem(Keys.DICT_LIST, JSON.stringify(dictList));
+        const wordList = words
+            ? words
+            : [];
+            
+        saveList.push(dictList);
+        saveList.push(wordList);
+
+        await AsyncStorage.setItem(Keys.DICT_LIST, JSON.stringify(saveList));
     }
 
     render() {
@@ -85,7 +95,7 @@ class Home extends Component {
                                                         );
                                                     } else {
                                                         innerContents.push(
-                                                            <TouchableHighlight key={id} style={Style.home.dictionaries.cellButton} activeOpacity={0.9} onPress={this.displayProps.bind(this)}>
+                                                            <TouchableHighlight key={id} style={Style.home.dictionaries.cellButton} activeOpacity={0.9} onPress={() => {this.displayProps(); this.props.setCurrentDict(id); dispatch({type: Actions.NAV_WORD_LIST})}}>
                                                                 <View style={Style.home.dictionaries.cell}>
                                                                     <Text style={Style.home.dictionaries.cellText}>{name}</Text>
                                                                 </View>
@@ -131,5 +141,10 @@ class Home extends Component {
     }
 }
 
-const mapStateToProps = state => ({dictList: state.dicts});
-export default connect(mapStateToProps)(Home);
+const mapStateToProps = state => ({dictList: state.dicts, wordList: state.wordList});
+
+const mapDispatchToProps = dispatch => ({
+    setCurrentDict: (id) => dispatch(setCurrentDict(id))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

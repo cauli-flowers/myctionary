@@ -1,13 +1,8 @@
-import {
-    combineReducers
-} from 'redux';
-import {
-    NavigationActions
-} from 'react-navigation';
+import {combineReducers} from 'redux';
+import {NavigationActions} from 'react-navigation';
 
 import {AppNavigator} from './components/Navigator';
 import * as Actions from './actions/action';
-
 
 ////////////////////////////////////////////////////////////////////
 // ナビゲーション用
@@ -22,24 +17,16 @@ function nav(state = initialNavState, action) {
     let nextState;
     switch (action.type) {
         case Actions.NAV_HOME:
-            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({
-                routeName: Actions.NAV_HOME
-            }), state);
+            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({routeName: Actions.NAV_HOME}), state);
             break;
         case Actions.NAV_ADD_DICT:
-            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({
-                routeName: Actions.NAV_ADD_DICT
-            }), state);
+            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({routeName: Actions.NAV_ADD_DICT}), state);
             break;
         case Actions.NAV_WORD_LIST:
-            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({
-                routeName: Actions.NAV_WORD_LIST
-            }), state);
+            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({routeName: Actions.NAV_WORD_LIST}), state);
             break;
         case Actions.NAV_ADD_WORD:
-            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({
-                routeName: Actions.NAV_ADD_WORD
-            }), state);
+            nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({routeName: Actions.NAV_ADD_WORD}), state);
             break;
         case Actions.NAV_BACK:
             nextState = AppNavigator.router.getStateForAction(NavigationActions.back(), state);
@@ -51,7 +38,6 @@ function nav(state = initialNavState, action) {
 
     return nextState || state;
 }
-
 
 ////////////////////////////////////////////////////////////////////
 // 辞書用
@@ -66,19 +52,11 @@ const dict = (state, action) => {
         case Actions.INITIAL_DICT:
             let list = [];
             action.data.map((key) => {
-                list.push({
-                    id: key['id'],
-                    name: key['name'],
-                    description: key['description'],
-                })
-            })
+                list.push({id: key['id'], name: key['name'], description: key['description']})
+            });
             return list;
         case Actions.ADD_DICT:
-            return {
-                id: action.id,
-                name: action.name,
-                description: action.description,
-            };
+            return {id: action.id, name: action.name, description: action.description};
         default:
             return state
     }
@@ -94,41 +72,77 @@ function dicts(state = initialDictState, action) {
                 ...state,
                 dict(undefined, action)
             ]
-        case Actions.DELETE_DICT:
-            return { ...state,
-            };
         default:
             return state;
     }
 }
 
+const initialCurrentDictState = {
+    currentDictId: 0
+};
+
+function currentDict(state = initialCurrentDictState, action) {
+    switch (action.type) {
+        case Actions.SET_CURRENT_DICT:
+            return {currentDictId: action.currentDictId};
+
+        default:
+            return state;
+    }
+}
 
 ////////////////////////////////////////////////////////////////////
 // 単語用
 ////////////////////////////////////////////////////////////////////
 
-const initialWordState = {
-    wordList: []
-};
+const initialWordState = [];
 
-function word(state = initialWordState, action) {
+const word = (state, action) => {
     switch (action.type) {
-        case 'ADD_WORD':
-            return { ...state,
+        case Actions.INITIAL_WORD:
+            let list = [];
+            action.data.map((key) => {
+                list.push({id: key['id'], word: key['word'], yomi: key['yomi'], description: key['description']})
+            });
+            return list;
+
+        case Actions.ADD_DICT:
+            return {
+                dictId: action.id,
+                words: []
             };
-        case 'DELETE_WORD':
-            return { ...state,
-            };
+        case Actions.ADD_WORD:
+            let copyState = [];
+            copyState = Object.assign(copyState , state);
+            let target = copyState[action.currentDictId - 1];
+            console.info(state)
+            target.words.push({id: action.id, word: action.word, yomi: action.yomi, description: action.description});
+            copyState[action.currentDictId - 1] = target;
+            return copyState;
+        default:
+            return state
+    }
+}
+
+function wordList(state = initialWordState, action) {
+    switch (action.type) {
+        case Actions.INITIAL_WORD:
+            return word(undefined, action);
+
+        case Actions.ADD_DICT:
+            return [
+                ...state,
+                word(undefined, action)
+            ]
+
+        case Actions.ADD_WORD:
+            return word(state, action);
+
         default:
             return state;
     }
 }
 
-
-const AppReducer = combineReducers({
-    nav,
-    dicts,
-    // word,
-});
+const AppReducer = combineReducers({nav, dicts, currentDict, wordList});
 
 export default AppReducer;

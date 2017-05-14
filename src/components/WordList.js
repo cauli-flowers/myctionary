@@ -10,6 +10,8 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import Color from '../style/Color';
 import Style from '../style/Style';
+import * as Actions from '../actions/action';
+import {connect} from 'react-redux';
 
 
 class WordList extends Component {
@@ -21,19 +23,23 @@ class WordList extends Component {
         });
         this.state = {
             dataSource: ds.cloneWithRowsAndSections({
-                'section1': [
-                    'row 1', 'row 2', 'row 3', 'row 4'
-                ],
-                'section2': [
-                    'row 1', 'row 2', 'row 3', 'row 4'
-                ],
-                'section3': [
-                    'row 1', 'row 2', 'row 3', 'row 4'
-                ],
-                'section4': [
-                    'row 1', 'row 2', 'row 3', 'row 4'
-                ],
-                'section5': ['row 1', 'row 2', 'row 3', 'row 4']
+                "あ": [
+                    {
+                        "id": 0,
+                        "word": "あい",
+                        "meaning": "あいの説明"
+                    },
+                    {
+                        "id": 1,
+                        "word": "あゆ",
+                        "meaning": "あゆの説明"
+                    },
+                    {
+                        "id": 2,
+                        "word": "あり",
+                        "meaning": "ありの説明"
+                    }
+                ]
             }),
         };
     }
@@ -43,8 +49,8 @@ class WordList extends Component {
         headerStyle: {
             backgroundColor: Color.white
         },
-        headerRight: <Icon.Button backgroundColor={Color.white} color={Color.pink} size={Style.common.navigation.button} name="ios-add" onPress={() => navigation.navigate('AddWord')}></Icon.Button>,
-        headerLeft: <Icon.Button backgroundColor={Color.white} color={Color.pink} size={Style.common.navigation.button} name="ios-arrow-back" onPress={() => navigation.goBack()}>戻る</Icon.Button>,
+        headerRight: <Icon.Button backgroundColor={Color.white} color={Color.pink} size={Style.common.navigation.button} name="ios-add" onPress={() => navigation.dispatch({type: Actions.NAV_ADD_WORD})}></Icon.Button>,
+        headerLeft: <Icon.Button backgroundColor={Color.white} color={Color.pink} size={Style.common.navigation.button} name="ios-arrow-back" onPress={() => navigation.dispatch({type: Actions.NAV_BACK})}>戻る</Icon.Button>,
     });
 
     renderSectionHeader(sectionData, sectionID) {
@@ -68,7 +74,7 @@ class WordList extends Component {
             <View>
                 <ListView dataSource={this.state.dataSource} renderRow={(rowData) => <TouchableHighlight underlayColor={Color.superLightGray} activeOpacity={0.8} onPress={() => {}}>
                     <View style={Style.dictList.list}>
-                        <Text>{rowData}</Text>
+                        <Text>{rowData["word"]}</Text>
                     </View>
                 </TouchableHighlight>} renderSectionHeader={this.renderSectionHeader} renderFooter={this.renderFooter} onEndReachedThreshold={40}/>
             </View>
@@ -76,4 +82,10 @@ class WordList extends Component {
     }
 }
 
-export default WordList;
+const mapStateToProps = state => ({dictList: state.dicts, currentDict: state.currentDict});
+
+// const mapDispatchToProps = dispatch => ({
+//     currentDict: (id, name, description) => dispatch(addDict(id, name, description))
+// });
+
+export default connect(mapStateToProps)(WordList);

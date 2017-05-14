@@ -7,7 +7,7 @@ import {AsyncStorage, Text} from 'react-native';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import AppReducer from './reducer';
-import {initialDict} from './actions/action';
+import {initialDict, initialWord} from './actions/action';
 import * as Keys from './storage/keys';
 
 
@@ -24,11 +24,13 @@ class App extends Component {
 
     componentWillMount() {
         // AsyncStorage.removeItem(Keys.DICT_LIST);
+
         this.setState({isStoreLoading: true});
         AsyncStorage.getItem(Keys.DICT_LIST).then((value) => {
             if (value && value.length) {
-                const jsonData = JSON.parse(value);
-                store.dispatch(initialDict(jsonData));
+                const initialJson = JSON.parse(value);
+                store.dispatch(initialDict(initialJson[0]));
+                store.dispatch(initialWord(initialJson[1]));
             } else {
                 const jsonData = [{
                     id: 0,
@@ -46,7 +48,7 @@ class App extends Component {
             }];
             store.dispatch(initialDict(jsonData));
             this.setState({isStoreLoading: false});
-        })
+        });
     }
 
     render() {
