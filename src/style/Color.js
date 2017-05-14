@@ -1,5 +1,6 @@
 const Color = {
     transparent: "transparent",
+    lightPink: "#ff889e", 
     pink: "#ff2d55",
     white: "#ffffff",
     superLightGray: "#f9f9f9",

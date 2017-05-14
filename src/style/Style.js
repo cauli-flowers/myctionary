@@ -20,6 +20,20 @@ const Style = {
             text: {
                 color: Color.pink,
             },
+            disabledRegist: {
+                backgroundColor: Color.lightGray,
+                borderWidth: 1,
+                borderColor: Color.lightPink,
+                height: 30,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 10,
+                marginLeft: 10,
+                borderRadius: 3,
+            },
+            disabledText: {
+                color: Color.lightPink,
+            },
         },
         textInput: {
             height: 35,
@@ -56,7 +70,8 @@ const Style = {
                 flex: 1,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                margin: 20
+                margin: 20,
+                marginBottom: 0,
             },
             add: {
                 width: 100,
@@ -85,6 +100,16 @@ const Style = {
                 width: 100,
                 height: 140,
                 backgroundColor: Color.powderblue
+            },
+            cellText: {
+                textAlign: 'center',
+                margin: 10,
+                marginTop: 20
+            },
+            emptyCell: {
+                width: 100,
+                height: 140,
+                backgroundColor: Color.lightGray
             },
             scrollArea: {
                 backgroundColor: Color.lightGray,

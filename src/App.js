@@ -23,16 +23,28 @@ class App extends Component {
     }
 
     componentWillMount() {
-        //AsyncStorage.removeItem(Keys.DICT_LIST);
+        // AsyncStorage.removeItem(Keys.DICT_LIST);
         this.setState({isStoreLoading: true});
         AsyncStorage.getItem(Keys.DICT_LIST).then((value) => {
             if (value && value.length) {
                 const jsonData = JSON.parse(value);
                 store.dispatch(initialDict(jsonData));
             } else {
+                const jsonData = [{
+                    id: 0,
+                    name: '追加ボタン用',
+                    description: '初期表示時の追加ボタン用データ',
+                }];
+                store.dispatch(initialDict(jsonData));
             }
             this.setState({isStoreLoading: false});
         }).catch((error) => {
+            const jsonData = [{
+                id: 0,
+                name: '追加ボタン用',
+                description: '初期表示時の追加ボタン用データ',
+            }];
+            store.dispatch(initialDict(jsonData));
             this.setState({isStoreLoading: false});
         })
     }

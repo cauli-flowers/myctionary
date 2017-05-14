@@ -1,3 +1,12 @@
+// 画面遷移用
+export const NAV_HOME = 'Home';
+export const NAV_ADD_DICT = 'AddDict';
+export const NAV_WORD_LIST = 'WordList';
+export const NAV_ADD_WORD = 'AddWord';
+export const NAV_BACK = 'Back';
+
+
+// 辞書関連用
 export const INITIAL_DICT = 'INITIAL_DICT';
 export const ADD_DICT = 'ADD_DICT';
 export const ADD_WORD = 'ADD_WORD';
