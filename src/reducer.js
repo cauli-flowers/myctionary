@@ -55,8 +55,10 @@ const dict = (state, action) => {
                 list.push({id: key['id'], name: key['name'], description: key['description']})
             });
             return list;
+
         case Actions.ADD_DICT:
             return {id: action.id, name: action.name, description: action.description};
+
         default:
             return state
     }
@@ -72,6 +74,7 @@ function dicts(state = initialDictState, action) {
                 ...state,
                 dict(undefined, action)
             ]
+
         default:
             return state;
     }
@@ -111,17 +114,27 @@ const word = (state, action) => {
                 dictId: action.id,
                 words: []
             };
+
         case Actions.ADD_WORD:
-            let copyState = [];
-            copyState = Object.assign(copyState , state);
-            let target = copyState[action.currentDictId - 1];
-            console.info(state)
-            target.words.push({id: action.id, word: action.word, yomi: action.yomi, description: action.description});
-            copyState[action.currentDictId - 1] = target;
-            return copyState;
+            return addWord(state, action);
+
         default:
             return state
     }
+}
+
+function addWord(state, action) {
+    let copyState = [];
+    // stateのコピーを作成
+    copyState = Object.assign(copyState , state);
+    // 該当辞書データを取得
+    let target = copyState[action.currentDictId - 1];
+    // 辞書に単語を追加
+    target.words.push({id: action.id, word: action.word, yomi: action.yomi, description: action.description});
+    // 該当辞書を書き換え
+    copyState[action.currentDictId - 1] = target;
+    
+    return copyState;
 }
 
 function wordList(state = initialWordState, action) {
