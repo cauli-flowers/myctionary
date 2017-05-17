@@ -130,11 +130,85 @@ function addWord(state, action) {
     // 該当辞書データを取得
     let target = copyState[action.currentDictId - 1];
     // 辞書に単語を追加
-    target.words.push({id: action.id, word: action.word, yomi: action.yomi, description: action.description});
+    let newData = {id: action.id, word: action.word, yomi: action.yomi, description: action.description};
+    let targetList = getTargetList(target.words);
+    let start = action.yomi.substring(0, 1);
+    let mergedData = mergeTargetArray(start, target.words, targetList, newData);
+    //target.words.push({id: action.id, word: action.word, yomi: action.yomi, description: action.description});
     // 該当辞書を書き換え
-    copyState[action.currentDictId - 1] = target;
-    
+    copyState[action.currentDictId - 1] = mergedData;
+
     return copyState;
+}
+
+/**
+ * ワードリストの該当分類リストを取得
+ *
+ * @param  {[string]} start [単語の頭文字]
+ * @param  {[array]} data [該当辞書の単語リスト]
+ * @return {[array]}      [頭文字に該当する分類の単語リスト]
+ */
+const getTargetList = (start, data) => {
+    for (let i in data) {
+        if (i === start) {
+            return data[i];
+        }
+    }
+    return [];
+}
+
+/**
+ * 新規データの追加とソート
+ *
+ * @param  {[string]} start           [単語の頭文字]
+ * @param  {[object]} mergeTargetData [マージ対象データ]
+ * @param  {[array]} targetList      [新規追加前リスト]
+ * @param  {[object]} newData         [追加データ]
+ * @return {[object]}                 [マージ後のデータ]
+ */
+const mergeTargetArray = (start, mergeTargetData, targetList, newData) => {
+    let copyData = [];
+    Object.assign(copyData, mergeTargetData);
+
+    targetList.push(newData);
+
+    targetArray.sort(function(a, b) {
+        if (a.yomi < b.yomi)
+            return -1;
+        if (a.yomi > b.yomi)
+            return 1;
+        return 0;
+    });
+
+    copyData[0][convertStart(start)] = targetList;
+
+    return copyData;
+}
+
+/**
+ * 頭文字をひらがなまたはアルファベット大文字に置き換える
+ *
+ * @param  {[type]} start [description]
+ * @return {[type]}       [description]
+ */
+function convertStart(start) {
+    const hiragana = /[\u3041-\u3096]/g;
+    const alphabet = /[A-B]/g
+    let upperStr = start.toUpperCase();
+
+    if (upperCaseStr.match(alphabet)) {
+        return upperCaseStr
+    }
+
+    const mtc = start.match(hiragana);
+    if (mtc) {
+        return mtc[0];
+    }
+
+    return start.replace(/[\u30a1-\u30f6]/g, function(match) {
+        var chr = match.charCodeAt(0) - 0x60;
+        return String.fromCharCode(chr);
+    });
 }
 
 function wordList(state = initialWordState, action) {
