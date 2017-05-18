@@ -127,16 +127,33 @@ function addWord(state, action) {
     let copyState = [];
     // stateのコピーを作成
     copyState = Object.assign(copyState , state);
+    // console.log('copyState');
+    // console.info(copyState);
     // 該当辞書データを取得
     let target = copyState[action.currentDictId - 1];
+
+    let start = action.yomi.substring(0, 1);
+    // console.log('start: ' + start);
     // 辞書に単語を追加
     let newData = {id: action.id, word: action.word, yomi: action.yomi, description: action.description};
-    let targetList = getTargetList(target.words);
-    let start = action.yomi.substring(0, 1);
+    let targetList = getTargetList(start, target.words);
+    // console.log('targetList');
+    // console.info(targetList);
+
     let mergedData = mergeTargetArray(start, target.words, targetList, newData);
-    //target.words.push({id: action.id, word: action.word, yomi: action.yomi, description: action.description});
+    console.log('mergedData');
+    console.info(mergedData);
+    // console.info(JSON.stringify(mergedData));
+    if (mergedData.length !== 0) {
+        target.words.push(mergedData);
+    }
+    console.log('target');
+    console.info(target);
+
     // 該当辞書を書き換え
-    copyState[action.currentDictId - 1] = mergedData;
+    // copyState[action.currentDictId - 1] = target;
+    // console.info(copyState[action.currentDictId - 1])
+    console.info(copyState)
 
     return copyState;
 }
@@ -169,10 +186,9 @@ const getTargetList = (start, data) => {
 const mergeTargetArray = (start, mergeTargetData, targetList, newData) => {
     let copyData = [];
     Object.assign(copyData, mergeTargetData);
-
     targetList.push(newData);
 
-    targetArray.sort(function(a, b) {
+    targetList.sort(function(a, b) {
         if (a.yomi < b.yomi)
             return -1;
         if (a.yomi > b.yomi)
@@ -180,7 +196,9 @@ const mergeTargetArray = (start, mergeTargetData, targetList, newData) => {
         return 0;
     });
 
-    copyData[0][convertStart(start)] = targetList;
+    let test = convertStart(start);
+
+    copyData[test] = targetList;
 
     return copyData;
 }
@@ -194,10 +212,10 @@ const mergeTargetArray = (start, mergeTargetData, targetList, newData) => {
 function convertStart(start) {
     const hiragana = /[\u3041-\u3096]/g;
     const alphabet = /[A-B]/g
-    let upperStr = start.toUpperCase();
+    let upperCaseStr = start.toUpperCase();
 
     if (upperCaseStr.match(alphabet)) {
-        return upperCaseStr
+        return upperCaseStr;
     }
 
     const mtc = start.match(hiragana);
