@@ -1,82 +1,37 @@
-[{
-    "dicts": [
-        {
-            "id": 0,
-            "name": "追加ボタン用",
-            "description": "初期表示時の追加ボタン用データ"
-        },
-        {
+[
+    [{
+        "id": 0,
+        "name": "追加ボタン用",
+        "description": "初期表示時の追加ボタン用データ"
+    }, {
+        "id": 1,
+        "name": "A",
+        "description": "C"
+    }, {
+        "id": 2,
+        "name": "どうぶつの名前",
+        "description": "動物の名前を集めた辞書"
+    }],
+    [{
+        "dictId": 1,
+        "words": [{
             "id": 1,
-            "name": "辞書名前1",
-            "description": "辞書説明1"
-        },
-        {
-            "id": 2,
-            "name": "辞書名前2",
-            "description": "辞書説明2"
-        }
-    ],
-    "currentDict": {
-        "currentDictId": 1,
-    },
-    "wordList": [
-        {
-            "dictId": 1,
-            "words" : [
-                {
-                    "あ": [
-                        {
-                            "id": 0,
-                            "word": "あい",
-                            "yomi": "アイ",
-                            "meaning": "あいの説明"
-                        },
-                        {
-                            "id": 1,
-                            "word": "あゆ",
-                            "yomi": "アユ",
-                            "meaning": "あゆの説明"
-                        },
-                        {
-                            "id": 2,
-                            "word": "あり",
-                            "yomi": "アリ",
-                            "meaning": "ありの説明"
-                        }
-                    ],
-                    "い": [
-                        {
-                            "id": 0,
-                            "word": "いと",
-                            "yomi": "イト",
-                            "meaning": "いとの説明"
-                        }
-                    ],
-                }
-            ]
-        },
-        {
-            "dictId": 2,
-            "words" : [
-                {
-                    "あ": [
-                        {
-                            "id": 0,
-                            "word": "あい",
-                            "yomi": "アイ",
-                            "meaning": "あいの説明"
-                        }
-                    ],
-                    "う": [
-                        {
-                            "id": 0,
-                            "word": "うえ",
-                            "yomi": "ウエ",
-                            "meaning": "うえの説明"
-                        }
-                    ],
-                }
-            ]
-        }
-    ]
-}]
+            "word": "A",
+            "yomi": "B",
+            "description": "C"
+        }, {
+            "id": 1,
+            "word": "W",
+            "yomi": "S",
+            "description": "X"
+        }]
+    }, {
+        "dictId": 2,
+        "words": [{
+            "id": 1,
+            "word": "きりん",
+            "yomi": "きりん",
+            "description": "首の長い動物"
+        }]
+    }]
+]

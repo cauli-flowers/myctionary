@@ -7,7 +7,7 @@ const Style = {
         },
         button: {
             regist: {
-                backgroundColor: Color.lightGray,
+                backgroundColor: Color.pink,
                 borderWidth: 1,
                 borderColor: Color.pink,
                 height: 30,
@@ -18,7 +18,7 @@ const Style = {
                 borderRadius: 3,
             },
             text: {
-                color: Color.pink,
+                color: Color.white,
             },
             disabledRegist: {
                 backgroundColor: Color.lightGray,

@@ -25,7 +25,7 @@ class AddDict extends Component {
     }
 
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: '辞書の追加',
+        title: 'Add a New Dictionary',
         headerStyle: {
             backgroundColor: Color.white
         },
@@ -52,14 +52,14 @@ class AddDict extends Component {
             return (
                 <TouchableOpacity onPress={this.addNewDict.bind(this)}>
                     <View style={Style.common.button.regist}>
-                        <Text style={Style.common.button.text}>登録</Text>
+                        <Text style={Style.common.button.text}>Registration</Text>
                     </View>
                 </TouchableOpacity>
             );
         } else {
             return (
                 <View style={Style.common.button.disabledRegist}>
-                    <Text style={Style.common.button.disabledText}>登録</Text>
+                    <Text style={Style.common.button.disabledText}>Registration</Text>
                 </View>
             );
         }
@@ -69,9 +69,9 @@ class AddDict extends Component {
         return (
             <ScrollView style={Style.home.dictionaries.scrollArea}>
                 <View style={Style.common.formArea}>
-                    <TextInput placeholder="辞書名" style={Style.common.textInput} onChangeText={(name) => {this.setState({name}); this.checkValidation(name, null); displayButton()}} value={this.state.name} editable={true} maxLength={15}/>
+                    <TextInput placeholder="name" style={Style.common.textInput} onChangeText={(name) => {this.setState({name}); this.checkValidation(name, null); displayButton()}} value={this.state.name} editable={true} maxLength={15}/>
 
-                    <TextInput placeholder="説明" style={Style.common.textInput} onChangeText={(description) => {this.setState({description}); this.checkValidation(null, description); displayButton()}} value={this.state.description} editable={true} maxLength={50}/>
+                    <TextInput placeholder="description" style={Style.common.textInput} onChangeText={(description) => {this.setState({description}); this.checkValidation(null, description); displayButton()}} value={this.state.description} editable={true} maxLength={50}/>
 
                     {(displayButton = () => {
                         return this.renderRegistButton();

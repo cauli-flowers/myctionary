@@ -21,7 +21,7 @@ class Home extends Component {
     }
 
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: '一覧',
+        title: 'Dictionaries List',
         headerStyle: {
             backgroundColor: Color.white
         },
@@ -47,7 +47,7 @@ class Home extends Component {
         const wordList = words
             ? words
             : [];
-            
+
         saveList.push(dictList);
         saveList.push(wordList);
 

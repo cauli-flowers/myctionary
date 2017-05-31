@@ -21,11 +21,12 @@ class AddWord extends Component {
             word: '',
             yomi: '',
             description: '',
+            isValidate: false,
         };
     }
 
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: '単語の追加',
+        title: 'Add a New Word',
         headerStyle: {
             backgroundColor: Color.white
         },
@@ -33,26 +34,51 @@ class AddWord extends Component {
     });
 
     addNewWord() {
-        // const id = this.props.wordList.length ? this.props.wordList.length : 0;
         this.props.addWord(this.props.currentDict.currentDictId, 1, this.state.word, this.state.yomi, this.state.description);
         this.props.navigation.dispatch({type: Actions.NAV_BACK});
+    }
+
+    checkValidation(word, yomi, description) {
+        if ((word && this.state.yomi && this.state.description)
+            || (this.state.word && yomi && this.state.description)
+            || (this.state.word && this.state.yomi && description)) {
+            this.setState({isValidate: true});
+        } else {
+            this.setState({isValidate: false});
+        }
+    }
+
+    renderRegistButton() {
+        if (this.state.isValidate) {
+            return (
+                <TouchableOpacity onPress={this.addNewWord.bind(this)}>
+                    <View style={Style.common.button.regist}>
+                        <Text style={Style.common.button.text}>Registration</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        } else {
+            return (
+                <View style={Style.common.button.disabledRegist}>
+                    <Text style={Style.common.button.disabledText}>Registration</Text>
+                </View>
+            );
+        }
     }
 
     render() {
         return (
             <ScrollView style={Style.home.dictionaries.scrollArea}>
                 <View style={Style.common.formArea}>
-                    <TextInput placeholder="単語名" style={Style.common.textInput} onChangeText={(word) => this.setState({word})} value={this.state.word} editable={true} maxLength={40}/>
+                    <TextInput placeholder="word" style={Style.common.textInput} onChangeText={(word) => {this.setState({word}); this.checkValidation(word, null, null); displayButton();}} value={this.state.word} editable={true} maxLength={40}/>
 
-                    <TextInput placeholder="読み方" style={Style.common.textInput} onChangeText={(yomi) => this.setState({yomi})} value={this.state.yomi} editable={true} maxLength={40}/>
+                    <TextInput placeholder="pronunciation" style={Style.common.textInput} onChangeText={(yomi) => {this.setState({yomi}); this.checkValidation(null, yomi, null); displayButton();}} value={this.state.yomi} editable={true} maxLength={40}/>
 
-                    <TextInput placeholder="意味" style={Style.common.textInput} onChangeText={(description) => this.setState({description})} value={this.state.description} editable={true} maxLength={40}/>
+                    <TextInput placeholder="meaning" style={Style.common.textInput} onChangeText={(description) => {this.setState({description});  this.checkValidation(null, null, description); displayButton();}} value={this.state.description} editable={true} maxLength={40}/>
 
-                    <TouchableOpacity onPress={this.addNewWord.bind(this)}>
-                        <View style={Style.common.button.regist}>
-                            <Text style={Style.common.button.text}>登録</Text>
-                        </View>
-                    </TouchableOpacity>
+                    {(displayButton = () => {
+                        return this.renderRegistButton();
+                    })()}
                 </View>
             </ScrollView>
         );
@@ -62,7 +88,7 @@ class AddWord extends Component {
 const mapStateToProps = state => ({wordList: state.wordList, currentDict: state.currentDict});
 
 const mapDispatchToProps = dispatch => ({
-    addWord: (currentDictId, id, name, yomi, description) => dispatch(addWord(currentDictId, id, name, yomi, description))
+    addWord: (currentDictId, id, word, yomi, description) => dispatch(addWord(currentDictId, id, word, yomi, description))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddWord);

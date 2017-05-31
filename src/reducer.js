@@ -51,7 +51,6 @@ const dict = (state, action) => {
     switch (action.type) {
         case Actions.INITIAL_DICT:
             let list = [];
-            // console.info(action.data)
             action.data.map((key) => {
                 list.push({id: key['id'], name: key['name'], description: key['description']})
             });
@@ -134,7 +133,7 @@ function addWord(state, action) {
 
     target.words.push({
         id: action.id,
-        name: action.name,
+        word: action.name,
         yomi: action.yomi,
         description: action.description,
     });
